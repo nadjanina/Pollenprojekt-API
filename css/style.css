@@ -250,11 +250,12 @@ body {
     height: 100%;
 }
 
+/* KORRIGIERT: Auf 6 Spalten für die Desktop-Ansicht angepasst */
 .pollen-grid {
     position: relative;
     z-index: 2;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); 
+    grid-template-columns: repeat(6, 1fr); 
     gap: 20px;
     align-items: flex-end;
 }
@@ -334,7 +335,9 @@ body {
 }
 
 
-
+/* ========================================================================= */
+/* RESPONSIVE DESIGN FOR MOBILE DEVICES                                      */
+/* ========================================================================= */
 @media (max-width: 768px) {
 
     .seite-wrapper {
@@ -405,6 +408,7 @@ body {
         align-items: center !important;
         justify-content: center !important;
         overflow: visible !important; 
+        transform: translateY(-3px) !important;
     }
 
     #lottie-status-container svg {
@@ -487,21 +491,13 @@ body {
         display: none;
     }
 
+    /* KORRIGIERT: 6 Elemente teilen sich perfekt auf 3 gleichmäßige Doppelzeilen auf */
     .pollen-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr); 
         gap: 20px 10px;
         align-items: start;
         width: 100%;
-    }
-
-    .pollen-grid .pollen-card:nth-child(5) {
-        grid-column: span 2; 
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
     }
 
     .pollen-num {

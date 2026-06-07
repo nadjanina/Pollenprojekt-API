@@ -1,5 +1,9 @@
+// ===================================================
+// API-ABFRAGEN FÜR POLLEN UND WETTER
+// ===================================================
 async function loadData(latitude, longitude) {
-    const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}&hourly=birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen`;
+    // KORRIGIERT: "alder_pollen" zur API-Abfrage hinzugefügt
+    const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${latitude}&longitude=${longitude}&hourly=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen`;
     try {
         const response = await fetch(url);
         return await response.json();
@@ -20,13 +24,14 @@ async function loadWetterData(latitude, longitude) {
     }
 }
 
-
+// Geografische Daten der auswählbaren Städte
 const staedteKoordinaten = {
     zuerich: { lat: 47.3769, lon: 8.5417, name: "Zürich" },
     bern: { lat: 46.9480, lon: 7.4474, name: "Bern" },
     chur: { lat: 46.8508, lon: 9.5320, name: "Chur" }
 };
 
+// Verbindung zu den HTML-Elementen herstellen
 const locationSelect = document.getElementById('location-select');
 const currentDateEl = document.getElementById('current-date');
 const currentTimeEl = document.getElementById('current-time');
@@ -37,6 +42,8 @@ const valTemp = document.getElementById('val-temp');
 const valRain = document.getElementById('val-rain');
 const valWind = document.getElementById('val-wind');
 
+// KORRIGIERT: Erle hinzugefügt
+const pErle = document.getElementById('pollen-erle');
 const pBirke = document.getElementById('pollen-birke');
 const pBeifuss = document.getElementById('pollen-beifuss');
 const pOlive = document.getElementById('pollen-olive');
@@ -48,6 +55,7 @@ const wetterBanner = document.querySelector('.wetter-banner');
 
 let aktuelleLottieAnimation = null;
 
+// Tauscht die Lottie-Animation flexibel aus
 function aktualisiereStatusAnimation(dateiName) {
     if (aktuelleLottieAnimation) {
         aktuelleLottieAnimation.destroy();
@@ -62,6 +70,7 @@ function aktualisiereStatusAnimation(dateiName) {
     });
 }
 
+// Setzt das aktuelle Datum und gibt die Stunde zurück
 function setzeAktuellesDatum() {
     const jetzt = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -73,6 +82,9 @@ function setzeAktuellesDatum() {
     return jetzt.getHours(); 
 }
 
+// ===================================================
+// DATEN VERARBEITEN UND ANZEIGEN
+// ===================================================
 async function ladeAPIDaten(stadtKey) {
     const stadt = staedteKoordinaten[stadtKey];
     if (!stadt) return;
@@ -83,17 +95,18 @@ async function ladeAPIDaten(stadtKey) {
         const pollenResponse = await loadData(stadt.lat, stadt.lon);
         const wetterResponse = await loadWetterData(stadt.lat, stadt.lon);
 
-        let b, bf, o, a, g;
+        let erle, b, bf, o, a, g;
         let tempWert, regenChance, windWert, wetterCode;
 
-     
+        // Fallback-Sicherung bei API-Ausfall oder Offline-Modus
         if (!pollenResponse || !wetterResponse || pollenResponse.error || wetterResponse.error) {
             console.warn("API temporär nicht erreichbar. Nutze Fallback-Werte.");
             loadSubtext.innerHTML = `⚠️ API überlastet. Zeige Test-Daten für ${stadt.name}.`;
             
-            b = 4.2; bf = 1.0; o = 0.0; a = 1.5; g = 12.6;
+            erle = 5.0; b = 4.2; bf = 1.0; o = 0.0; a = 1.5; g = 12.6;
             tempWert = 16; regenChance = 20; windWert = 8; wetterCode = 1; 
         } else {
+            erle = pollenResponse.hourly.alder_pollen[aktuelleStunde] || 0;
             b = pollenResponse.hourly.birch_pollen[aktuelleStunde] || 0;
             bf = pollenResponse.hourly.mugwort_pollen[aktuelleStunde] || 0;
             o = pollenResponse.hourly.olive_pollen[aktuelleStunde] || 0;
@@ -108,19 +121,20 @@ async function ladeAPIDaten(stadtKey) {
             loadSubtext.innerHTML = `Live-Daten für ${stadt.name} wurden geladen.`;
         }
 
-
+        // 1. Messwerte in die Pollenkarten schreiben
+        pErle.textContent = erle.toFixed(1);
         pBirke.textContent = b.toFixed(1);
         pBeifuss.textContent = bf.toFixed(1);
         pOlive.textContent = o.toFixed(1);
         pAmbrosia.textContent = a.toFixed(1);
         pGraeser.textContent = g.toFixed(1);
 
- 
+        // 2. Wetterwerte in die Kreise schreiben
         valTemp.textContent = `${tempWert}°C`;
         valRain.textContent = `${regenChance}%`;
         valWind.textContent = `${windWert} km/h`;
 
-
+        // 3. Hintergrundbild des Banners je nach Wetterlage austauschen
         if (wetterBanner) {
             if (wetterCode === 0) {
                 wetterBanner.style.backgroundImage = "url('img/sonnig.png')";
@@ -135,31 +149,27 @@ async function ladeAPIDaten(stadtKey) {
             }
         }
 
-        const maxPollen = Math.max(b, bf, o, a, g);
+        // 4. Gesamtzustand auswerten (Erle fliest jetzt mit ein)
+        const maxPollen = Math.max(erle, b, bf, o, a, g);
         if (maxPollen > 15) {
             mainLoad.textContent = "hoch";
             mainLoad.className = "load-high";
             if (!pollenResponse?.error) loadSubtext.innerHTML = `Starke Pollenbelastung in ${stadt.name}.`;
-            
-   
             aktualisiereStatusAnimation('bad.json');
         } else if (maxPollen > 2) {
             mainLoad.textContent = "mässig";
             mainLoad.className = "";
             if (!pollenResponse?.error) loadSubtext.innerHTML = `Mässige Pollenbelastung in ${stadt.name}.`;
-            
-   
             aktualisiereStatusAnimation('good.json');
         } else {
             mainLoad.textContent = "schwach";
             mainLoad.className = "";
             if (!pollenResponse?.error) loadSubtext.innerHTML = `Geringe Belastung in ${stadt.name}. Durchatmen möglich!`;
-            
-         
             aktualisiereStatusAnimation('good.json');
         }
 
-   
+        // 5. Linienwerte für das 6-Punkte-SVG-Diagramm errechnen
+        const yE = 280 - Math.min(erle * 6, 240);
         const yB = 280 - Math.min(b * 6, 240);
         const yBf = 280 - Math.min(bf * 6, 240);
         const yO = 280 - Math.min(o * 6, 240);
@@ -167,7 +177,8 @@ async function ladeAPIDaten(stadtKey) {
         const yG = 280 - Math.min(g * 6, 240);
 
         if (graphLine) {
-            graphLine.setAttribute('points', `120,${yB} 360,${yBf} 600,${yO} 840,${yA} 1080,${yG}`);
+            // Punkte perfekt aufgeteilt für 6 Stationen (100 bis 1100)
+            graphLine.setAttribute('points', `100,${yE} 300,${yB} 500,${yBf} 700,${yO} 900,${yA} 1100,${yG}`);
         }
 
     } catch (error) {
@@ -176,8 +187,8 @@ async function ladeAPIDaten(stadtKey) {
     }
 }
 
-
+// Event-Listener für die Städtewahl registrieren
 locationSelect.addEventListener('change', (e) => ladeAPIDaten(e.target.value));
 
-
+// Anwendung starten
 ladeAPIDaten('zuerich');
