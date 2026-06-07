@@ -3,23 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cocktail API</title>
+    <title>Pollenbelastung</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    <header>
-        <h1>Vorlage für interaktive Medien 2</h1>
 
-    </header>
-    <main>
-        <h2>Main Content</h2>
-        <p>This is the main content of the page.</p>
+    <div class="seite-wrapper">
+        <div class="line-vertical"></div>
+        <div class="line-horizontal-oben"></div>
+        <div class="line-horizontal-mitte"></div>
+        <div class="line-horizontal-unten"></div>
 
-    </main>
-    <footer>
-        <p>This is the footer of the page.</p>
+        <div class="seite-container">
+            
+            <header class="seite-header">
+                <div class="meta-info">
+                    <p><strong>Datum:</strong> <span id="current-date">-</span></p>
+                    <p><strong>Zeit:</strong> <span id="current-time">-</span></p>
+                    <div class="status-box">
+                        <div class="status-box-row">
+                            <p><strong>Belastung:</strong> <span id="main-load">-</span></p>
+                            <div id="lottie-status-container"></div>
+                        </div>
+                        <p id="load-subtext" class="subtext">Daten werden geladen...</p>
+                    </div>
+                </div>
 
-    </footer>
-    <script src="js/script.js" type="module"></script>
+                <div class="dropdown-container">
+                    <select id="location-select">
+                        <option value="zuerich" selected>Zürich</option>
+                        <option value="bern">Bern</option>
+                        <option value="chur">Chur</option>
+                    </select>
+                </div>
+            </header>
+
+            <section class="weather-section">
+                <h2 class="section-title">Wetter:</h2>
+                <div class="circles-container">
+                    
+                    <div class="wetter-circle">
+                        <span class="circle-title">Temperatur:</span>
+                        <div class="circle-body">
+                            <span id="val-temp" class="circle-value temp-text">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="wetter-circle">
+                        <span class="circle-title">Niederschlag:</span>
+                        <div class="circle-body">
+                            <span id="val-rain" class="circle-value small-weather-text">-</span>
+                            <img src="img/regentropfen.png" alt="Regen Icon" class="circle-icon">
+                        </div>
+                    </div>
+                    
+                    <div class="wetter-circle">
+                        <span class="circle-title">Wind:</span>
+                        <div class="circle-body">
+                            <span id="val-wind" class="circle-value small-weather-text">-</span>
+                            <img src="img/wind.png" alt="Wind Icon" class="circle-icon">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="wetter-banner"></div>
+            </section>
+
+            <section class="pollen-section">
+                <h2 class="section-title">Pollenbelastung:</h2>
+                
+                <div class="chart-background">
+                    <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+                        <polyline id="graph-line" fill="none" stroke="#8c867a" stroke-width="2" points="50,280 250,280 450,280 650,280 850,280" />
+                    </svg>
+                </div>
+
+                <div class="pollen-grid">
+                    <div class="pollen-card">
+                        <div class="pollen-header">
+                            <span id="pollen-birke" class="pollen-num">0</span>
+                            <span class="pollen-unit">grains/m³</span>
+                        </div>
+                        <div class="pollen-indicator-line"></div>
+                        <div class="img-wrapper"><img src="img/birkenpollen.png" alt="Birkenpollen" onerror="this.style.opacity='0.2'"></div>
+                        <h3>Birkenpollen</h3>
+                    </div>
+
+                    <div class="pollen-card">
+                        <div class="pollen-header">
+                            <span id="pollen-beifuss" class="pollen-num">0</span>
+                            <span class="pollen-unit">grains/m³</span>
+                        </div>
+                        <div class="pollen-indicator-line"></div>
+                        <div class="img-wrapper"><img src="img/beifusspollen.png" alt="Beifusspollen" onerror="this.style.opacity='0.2'"></div>
+                        <h3>Beifusspollen</h3>
+                    </div>
+
+                    <div class="pollen-card">
+                        <div class="pollen-header">
+                            <span id="pollen-olive" class="pollen-num">0</span>
+                            <span class="pollen-unit">grains/m³</span>
+                        </div>
+                        <div class="pollen-indicator-line"></div>
+                        <div class="img-wrapper"><img src="img/olivenbaumpollen.png" alt="Olivenpollen" onerror="this.style.opacity='0.2'"></div>
+                        <h3>Olivenpollen</h3>
+                    </div>
+
+                    <div class="pollen-card">
+                        <div class="pollen-header">
+                            <span id="pollen-ambrosia" class="pollen-num">0</span>
+                            <span class="pollen-unit">grains/m³</span>
+                        </div>
+                        <div class="pollen-indicator-line"></div>
+                        <div class="img-wrapper"><img src="img/ambrosiapollen.png" alt="Ambrosiapollen" onerror="this.style.opacity='0.2'"></div>
+                        <h3>Ambrosiapollen</h3>
+                    </div>
+
+                    <div class="pollen-card">
+                        <div class="pollen-header">
+                            <span id="pollen-graeser" class="pollen-num">0</span>
+                            <span class="pollen-unit">grains/m³</span>
+                        </div>
+                        <div class="pollen-indicator-line"></div>
+                        <div class="img-wrapper"><img src="img/graeserpollen.png" alt="Gräserpollen"></div>
+                        <h3>Gräserpollen</h3>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

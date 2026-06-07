@@ -1,11 +1,530 @@
+@font-face {
+    font-family: 'Massilia';
+    src: url('../fonts/massilia-medium.woff2') format('woff2'),
+         url('../fonts/massilia-medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Moul';
+    src: url('../fonts/moul-regular.woff2') format('woff2'),
+         url('../fonts/moul-regular.woff') format('woff');
+    font-style: normal;
+    font-weight: bold;
+}
+
+:root {
+    --bg-color: #f3eee6;      
+    --text-color: #4a453c;    
+    --accent-orange: #d97736; 
+    --line-color: #8c867a;  
+    --line-color-dark: #656056;  
+}
+
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
-
 
 body {
-    background-color: pink;
+    background-color: var(--bg-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--text-color);
+    overflow-x: hidden;
 }
 
+.seite-wrapper {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px 60px;
+}
+
+.line-vertical {
+    position: absolute;
+    left: 45px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--line-color-dark);
+    z-index: 1;
+}
+
+.line-horizontal-oben {
+    position: absolute;
+    top: 340px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--line-color);
+    z-index: 1;
+}
+
+.line-horizontal-mitte {
+    position: absolute;
+    top: 550px; 
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--line-color);
+    z-index: 1;
+}
+
+.line-horizontal-unten {
+    position: absolute;
+    top: calc(100% - 40px); 
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--line-color-dark);
+    z-index: 1;
+}
+
+.seite-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 60px;
+}
+
+.seite-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.meta-info p {
+    font-family: 'Massilia', sans-serif;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.meta-info p span {
+    font-weight: normal;
+}
+
+.status-box {
+    margin-top: 15px;
+}
+
+.status-box-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-box-row p {
+    font-family: 'Massilia', sans-serif;
+    font-weight: bold;
+}
+
+#main-load {
+    font-weight: normal !important; 
+}
+
+#lottie-status-container {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lottie-status-container svg {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+}
+
+.subtext {
+    font-family: 'Massilia', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    margin-top: 2px;
+    opacity: 0.9;
+    font-weight: normal !important;
+}
+
+#location-select {
+    padding: 10px 50px 10px 15px; 
+    font-size: 1rem;
+    font-family: 'Massilia', sans-serif;
+    border: 1px solid var(--text-color);
+    background-color: transparent;
+    border-radius: 12px;
+    color: var(--text-color);
+    cursor: pointer;
+    outline: none;
+}
+
+.section-title {
+    font-family: 'Massilia', sans-serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.weather-section {
+    margin-bottom: 60px;
+}
+
+.circles-container {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 20px;
+}
+
+.wetter-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+}
+
+.circle-title {
+    font-family: 'Massilia', sans-serif;
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.circle-body {
+    width: 120px;
+    height: 120px;
+    border: 1.5px solid var(--line-color);
+    border-radius: 50%;
+    background-color: var(--bg-color);
+    display: flex !important;
+    flex-direction: column !important; 
+    align-items: center !important;    
+    justify-content: center !important;
+    text-align: center;
+    padding: 10px;
+}
+
+.circle-value {
+    font-family: 'Moul', serif;
+    font-size: 1.6rem;
+    color: var(--accent-orange);
+    font-weight: bold;
+}
+
+.wetter-banner {
+    width: 100%;
+    height: 120px;               
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-size: cover;      
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-color: transparent; 
+    
+    border-radius: 8px;          
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.pollen-section {
+    position: relative;
+    padding-top: 20px;
+}
+
+.chart-background {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    height: 220px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.chart-background svg {
+    width: 100%;
+    height: 100%;
+}
+
+.pollen-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.pollen-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.pollen-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 70px;
+    justify-content: flex-end;
+}
+
+.pollen-num {
+    font-family: 'Moul', serif;
+    font-size: 3rem;
+    color: var(--accent-orange);
+    line-height: 1;
+    font-weight: bold;
+}
+
+.pollen-unit {
+    font-family: 'Massilia', sans-serif;
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: var(--accent-orange);
+}
+
+.pollen-indicator-line {
+    width: 2px;
+    height: 35px;
+    background-color: var(--accent-orange);
+    margin: 8px 0;
+}
+
+.img-wrapper {
+    width: 110px;
+    height: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.pollen-card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.pollen-card h3 {
+    font-family: 'Massilia', sans-serif;
+    font-weight: bold;
+    font-size: 0.95rem;
+    margin-top: 5px;
+}
+
+.temp-text {
+    font-size: 2rem !important;
+}
+
+.small-weather-text {
+    font-size: 1.6rem !important;
+}
+
+.circle-icon {
+    width: 26px;         
+    height: auto;        
+    margin-top: 8px;     
+    object-fit: contain;
+}
+
+
+
+@media (max-width: 768px) {
+
+    .seite-wrapper {
+        padding: 30px 15px;
+        width: 100% !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        position: relative;
+        z-index: 1;
+    }
+
+    .seite-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;      
+        padding-left: 20px;         
+        padding-right: 10px;
+        padding-bottom: 30px;
+        box-sizing: border-box;
+    }
+
+    .weather-section {
+        margin-bottom: 20px; 
+        width: 100%;
+    }
+
+    .line-vertical {
+        left: 20px; 
+    }
+
+    .line-horizontal-oben {
+        top: 300px; 
+    }
+
+    .line-horizontal-mitte {
+        top: 390px; 
+    }
+
+    .line-horizontal-unten {
+        top: calc(100% - 30px); 
+    }
+
+    .seite-header {
+        display: flex;
+        flex-direction: row;       
+        justify-content: space-between; 
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .meta-info {
+        max-width: 65%;            
+    }
+
+    #location-select {
+        width: auto !important;               
+        padding: 6px 15px !important;         
+        font-size: 0.9rem !important;
+        font-family: 'Massilia', sans-serif !important;
+        font-weight: normal !important;
+    }
+
+    #lottie-status-container {
+        width: 24px !important;
+        height: 24px !important;
+        display: flex !important;   
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: visible !important; 
+    }
+
+    #lottie-status-container svg {
+        width: 100% !important;
+        height: 100% !important;
+        display: block !important;
+    }
+
+    .status-box-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    .circles-container {
+        display: flex;
+        flex-direction: row;    
+        gap: 8px;              
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 25px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .wetter-circle {
+        width: 90px;           
+    }
+
+    .circle-title {
+        font-size: 0.75rem;      
+        margin-bottom: 5px;
+    }
+
+    .wetter-circle .circle-body {
+        width: 80px;            
+        height: 80px;
+        padding: 5px;
+    }
+
+    .wetter-circle .temp-text {
+        font-size: 1.1rem !important; 
+    }
+
+    .wetter-circle .small-weather-text {
+        font-size: 0.9rem !important; 
+    }
+
+    .wetter-circle .circle-icon {
+        width: 16px;            
+        margin-top: 2px;
+    }
+
+    .wetter-banner {
+        position: absolute;    
+        left: 0;
+        right: 0;
+        top: 280px;            
+        height: 80px;          
+        margin: 0 !important;  
+        z-index: -1;            
+        background-position: right center !important; 
+        background-repeat: no-repeat;
+        background-size: auto 50% !important; 
+        max-width: 100% !important;
+    }
+
+    .pollen-section {
+        position: relative;
+        padding-top: 25px !important; 
+        width: 100%;
+    }
+
+    .pollen-section .section-title {
+        margin-top: 15px !important;  
+        margin-bottom: 15px;
+    }
+
+    .chart-background {
+        display: none;
+    }
+
+    .pollen-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px 10px;
+        align-items: start;
+        width: 100%;
+    }
+
+    .pollen-grid .pollen-card:nth-child(5) {
+        grid-column: span 2; 
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+    }
+
+    .pollen-num {
+        font-size: 2.4rem !important; 
+    }
+
+    .pollen-indicator-line {
+        height: 15px;
+    }
+
+    .img-wrapper {
+        width: 80px !important;
+        height: 80px !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin-bottom: 15px !important;
+    }
+
+    .pollen-card img {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain !important;
+        display: block !important;
+    }
+}
